@@ -3,11 +3,9 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineUser } from "react-icons/ai";
 
-const icons = [AiOutlineHeart, AiOutlineSearch, AiOutlineUser]
-
 export default function Navbar() {
     return (
-        <header >
+        <header className='bg-red-100' >
             <nav className='flex p-4 justify-between'>
                 <p className='text-xl  text-[#0082e6]'>
                     Price <span className='text-xl font-bold text-[#ff1d25] ' >insider</span>

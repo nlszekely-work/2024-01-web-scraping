@@ -1,9 +1,19 @@
-import Image from 'next/image'
+import HeroCarousel from '@/components/HeroCarousel'
+import SearchBar from '@/components/SearchBar'
+
+
 
 export default function Home() {
-  return (
-    <main className="">
-      
-    </main>
-  )
+    return (
+        < >
+            <section>
+                <SearchBar />
+                <HeroCarousel />
+
+            </section>
+            <section>
+
+            </section>
+        </>
+    )
 }
