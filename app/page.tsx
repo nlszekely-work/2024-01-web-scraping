@@ -8,7 +8,7 @@ export default function Home() {
         < >
             <section>
                 <SearchBar />
-                <HeroCarousel />
+                {/* <HeroCarousel /> */}
 
             </section>
             <section>
