@@ -1,7 +1,5 @@
 import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
-import sqlite3 from "sqlite3";
-import { open, Database } from "sqlite";
 import { DataTypes, Sequelize } from "sequelize";
 
 const targetClass = "product-new-price";
@@ -13,21 +11,33 @@ const sequelize = new Sequelize({
     storage: "./db/database.db",
 });
 
-const ScrapedData = sequelize.define('ScrapedData', {
+const ScrapedData = sequelize.define("ScrapedData", {
+    url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     title: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     price: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.NUMBER,
+        allowNull: false,
     },
     image: {
-      type: DataTypes.STRING,
+        type: DataTypes.STRING,
     },
     is_available: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
     },
 });
 
@@ -92,12 +102,14 @@ export async function POST(request: Request, response: Response) {
 
         // Insert data into the table
         const scrapedData = await ScrapedData.create({
-          title: pageTitle,
-          price: price[0],
-          image: imageSrc,
-          is_available: !isOutOfStock,
+            url: searchPrompt,
+            title: pageTitle,
+            price: price[0],
+            image: imageSrc,
+            is_available: !isOutOfStock,
+            createdAt: new Date(),
+            updatedAt: new Date(),
         });
-
 
         return NextResponse.json(
             {
@@ -114,3 +126,7 @@ export async function POST(request: Request, response: Response) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
+
+// we need priceHistory array to the scraped data
+// highest price
+// loves price
