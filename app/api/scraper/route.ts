@@ -52,14 +52,11 @@ export async function POST(request: Request, response: Response) {
 
         // Add your scraping logic here
         const pageTitle = await page.title();
-        // const pageContent = await page.content();
 
         const price = await page.$$eval(`.${targetClass}`, (elements) => {
             return elements.map((element) => element.textContent);
         });
 
-        //   Check availability
-        // <span class="label label-out_of_stock">Stoc epuizat</span>
         let isOutOfStock: any = false;
         try {
             isOutOfStock = await page.$eval(isOutOfStockTargetClass, (element) => element?.textContent);
@@ -71,33 +68,7 @@ export async function POST(request: Request, response: Response) {
 
         await browser.close();
 
-        // Save data to SQLite database -------------------------------------------
-
-        // If the database instance is not initialized, open the database connection
-        // const db = await open({
-        //     filename: "./collection.db", // Specify the database file path
-        //     driver: sqlite3.Database, // Specify the database driver (sqlite3 in this case)
-        // });
-
-        // await db.exec(`
-        //   CREATE TABLE IF NOT EXISTS scraped_data (
-        //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-        //     title TEXT,
-        //     price TEXT,
-        //     image TEXT,
-        //     is_available INTEGER
-        //   );
-        // `);
-
-        // const insertData = await db.prepare(`
-        //   INSERT INTO scraped_data (title, price, image, is_available)
-        //   VALUES (?, ?, ?, ?);
-        // `);
-
-        // await insertData.run(pageTitle, price[0], imageSrc, !isOutOfStock);
-        // await insertData.finalize();
-        // await db.close();
-
+        // Init db connection
         await ScrapedData.sync();
 
         // Insert data into the table
@@ -112,13 +83,7 @@ export async function POST(request: Request, response: Response) {
         });
 
         return NextResponse.json(
-            {
-                // title: pageTitle,
-                // price: price[0],
-                // image: imageSrc,
-                // isAvailable: !isOutOfStock,
-                hello: scrapedData,
-            },
+            scrapedData,
             { status: 200 }
         );
     } catch (error) {
@@ -127,6 +92,4 @@ export async function POST(request: Request, response: Response) {
     }
 }
 
-// we need priceHistory array to the scraped data
-// highest price
-// loves price
+
